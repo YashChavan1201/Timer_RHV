@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-size: 30em; /* Increased font size */
+        }
+        body.flashing {
+            animation: flash 0.25s infinite alternate; /* Faster flashing */
+        }
+        @keyframes flash {
+            from { background-color: black; }
+            to { background-color: red; }
+        }
+    </style>
+</head>
+<body>
+    <span id="timer">00:00</span>
+    <script>
+        let duration = 80; // in seconds, e.g. 5 minutes
+        let flashAt = 60;  // flash the screen when only 60 seconds are left
+        let flashDuration = 10; // flash for 10 seconds
+
+        function updateTimerDisplay(seconds) {
+            let mins = Math.floor(seconds / 60);
+            let secs = seconds % 60;
+            document.getElementById('timer').textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            let currentTime = duration;
+            let flashEndTime = flashAt - flashDuration; // when the flashing should stop
+            updateTimerDisplay(currentTime);
+            let interval = setInterval(() => {
+                currentTime--;
+                updateTimerDisplay(currentTime);
+                if (currentTime === flashAt) {
+                    document.body.classList.add('flashing');
+                }
+                if (currentTime === flashEndTime) {
+                    document.body.classList.remove('flashing');
+                }
+                if (currentTime <= 0) {
+                    clearInterval(interval);
+                }
+            }, 1000);
+        }
+
+        startTimer();
+    </script>
+</body>
+</html>
+
